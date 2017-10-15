@@ -70,8 +70,14 @@ RUN set -xe && \
     rm /root/suhosin-$SUHOSIN_VERSION.tar.gz && \
     rm -rf /root/suhosin-$SUHOSIN_VERSION && \
 
-    apk del .build-deps
+    apk del .build-deps && \
 
-RUN mkdir -p /run/apache2
+    # Maybe some users will want to permit some functions blocked in the list above
+    # You will need to pass them via FUNCTIONS env variable like this:
+    # FUNCTIONS="\<function1\>|\<function2\>"
+    echo 'if [ ! -z ${FUNCTIONS+x} ]; then sed -r "/^disable_functions/ s/${FUNCTIONS}//g" -i /etc/php5/php.ini; fi; apachectl -D FOREGROUND' > /start.sh && \
+    chmod a+x /start.sh && \
 
-CMD ["apachectl", "-D", "FOREGROUND"]
+    mkdir -p /run/apache2
+
+CMD ["/start.sh"]
