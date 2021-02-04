@@ -1,5 +1,9 @@
 {
   "extends": [
     "config:base"
-  ]
+  ],
+  "labels": ["dependencies"],
+  "schedule": ["after 10am and before 3pm on every weekday"],
+  "assignees": ["@eana"],
+  "reviewers": ["@eana"]
 }
